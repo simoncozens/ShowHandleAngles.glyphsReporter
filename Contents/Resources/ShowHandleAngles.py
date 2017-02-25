@@ -5,7 +5,7 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 import math
-from GlyphsApp import OFFCURVE
+from GlyphsApp import OFFCURVE, LINE
 
 MainBundle = NSBundle.mainBundle()
 path = MainBundle.bundlePath() + "/Contents/Scripts"
@@ -53,13 +53,13 @@ class ShowHandleAngles ( NSObject, GlyphsReporterProtocol ):
 	def drawHandleAngles( self, Layer ):
 		for thisPath in Layer.paths:
 			for node in thisPath.nodes:
-				if node.type != OFFCURVE and node.nextNode.type == OFFCURVE:
+				if (node.type != OFFCURVE and node.nextNode.type == OFFCURVE) or (node.type == LINE and node.nextNode.type == LINE):
 					p1 = node.position
 					p2 = node.nextNode.position
 					if not self.straight(p1,p2):
 						lerp = ((p1.x+p2.x)/2, (p1.y+p2.y)/2)
 						self.drawTextAtPoint( u"%d°" % self.nAngle(p1,p2), lerp)
-				if node.type != OFFCURVE and node.prevNode.type == OFFCURVE:
+				if (node.type != OFFCURVE and node.prevNode.type == OFFCURVE) or (node.type == LINE and node.prevNode.type == LINE):
 					p1 = node.position
 					p2 = node.prevNode.position
 					if not self.straight(p1,p2):
