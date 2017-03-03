@@ -59,7 +59,7 @@ class ShowHandleAngles ( NSObject, GlyphsReporterProtocol ):
 					if not self.straight(p1,p2):
 						lerp = ((p1.x+p2.x)/2, (p1.y+p2.y)/2)
 						self.drawTextAtPoint( u"%d°" % self.nAngle(p1,p2), lerp)
-				if (node.type != OFFCURVE and node.prevNode.type == OFFCURVE) or (node.type == LINE and node.prevNode.type == LINE):
+				if (node.type != OFFCURVE and node.prevNode.type == OFFCURVE):
 					p1 = node.position
 					p2 = node.prevNode.position
 					if not self.straight(p1,p2):
