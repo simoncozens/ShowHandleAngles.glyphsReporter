@@ -53,18 +53,11 @@ class ShowHandleAngles ( NSObject, GlyphsReporterProtocol ):
 	def drawHandleAngles( self, Layer ):
 		for thisPath in Layer.paths:
 			for node in thisPath.nodes:
-				if (node.type != OFFCURVE and node.nextNode.type == OFFCURVE) or (node.type == LINE and node.nextNode.type == LINE):
-					p1 = node.position
-					p2 = node.nextNode.position
-					if not self.straight(p1,p2):
-						lerp = ((p1.x+p2.x)/2, (p1.y+p2.y)/2)
-						self.drawTextAtPoint( u"%d°" % self.nAngle(p1,p2), lerp)
-				if (node.type != OFFCURVE and node.prevNode.type == OFFCURVE):
-					p1 = node.position
-					p2 = node.prevNode.position
-					if not self.straight(p1,p2):
-						lerp = ((p1.x+p2.x)/2, (p1.y+p2.y)/2)
-						self.drawTextAtPoint( u"%d°" % self.nAngle(p1,p2), lerp)
+				p1 = node.position
+				p2 = node.nextNode.position
+				if not self.straight(p1,p2) and not (node.type == OFFCURVE and node.nextNode.type == OFFCURVE):
+					lerp = ((p1.x+p2.x)/2, (p1.y+p2.y)/2)
+					self.drawTextAtPoint( u"%d°" % self.nAngle(p1,p2), lerp)
 
 	def drawBackgroundForLayer_( self, Layer ):
 		try:
@@ -86,7 +79,7 @@ class ShowHandleAngles ( NSObject, GlyphsReporterProtocol ):
 				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
 				NSForegroundColorAttributeName: fontColor }
 			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
-			textAlignment = 2 # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
+			textAlignment = 4 # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
 			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
